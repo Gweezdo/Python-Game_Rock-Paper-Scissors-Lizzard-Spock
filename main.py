@@ -2,6 +2,39 @@
 
 import random
 
+
+def game_logic(user_choice, computer_choice):
+    if(user_choice == computer_choice):
+        return 0
+    #user win    
+    elif(user_choice == "Rock" and (computer_choice == "Scissors" or computer_choice == "Lizard")):
+        return 1
+    elif(user_choice == "Paper" and (computer_choice == "Rock" or computer_choice == "Spock")):
+        return 1
+    elif(user_choice == "Scissors" and (computer_choice == "Lizard" or computer_choice == "Paper")):
+        return 1
+    elif(user_choice == "Lizard" and (computer_choice == "Spock" or computer_choice == "Paper")):
+        return 1
+    elif(user_choice == "Spock" and (computer_choice == "Rock" or computer_choice == "Scissors")):
+        return 1
+    #computer win    
+    elif(computer_choice == "Rock" and (user_choice == "Scissors" or user_choice == "Lizard")):
+        return -1
+    elif(computer_choice == "Paper" and (user_choice == "Rock" or user_choice == "Spock")):
+        return -1
+    elif(computer_choice == "Scissors" and (user_choice == "Lizard" or user_choice == "Paper")):
+        return -1
+    elif(computer_choice == "Lizard" and (user_choice == "Spock" or user_choice == "Paper")):
+        return -1
+    elif(computer_choice == "Spock" and (user_choice == "Rock" or user_choice == "Scissors")):
+        return -1
+
+#Com Putera's guess
+def computer_guess_func():
+    object_list = ["Rock", "Paper", "Scissors", "Lizard", "Spock"]
+    random_int = random.randint(0,4)
+    return object_list[random_int]
+
 #Game start screen
 def mainGame():
     username = input("Welcome to Rock Paper Scissors Lizard Spock! \nPlease enter your character name: ")
@@ -37,7 +70,7 @@ def mainGame():
             print("\n")
             break
         elif(game_objective.lower() == 'n'):
-            break
+            continue
         else:
             game_objective = input("Oops, that was unexpected input! To see the rules of the game enter 'Y' for Yes or 'N' for No : ")
             print("\n")
@@ -47,18 +80,17 @@ def mainGame():
 
 
 #Main game loop
-    compuer_total, user_total = 0
+    computer_total = 0
+    user_total = 0
+    tie_total = 0
 
     rounds = range(game_rounds)
     for i in rounds:
         
-        #Com Putera's guess
-        object_list = ["Rock", "Paper", "Scissors", "Lizard", "Spock"]
-        random_int = random.randint(0,4)
-        computer_guess = object_list[random_int]
+        computer_guess = computer_guess_func()
 
         print("Round " + str(i+1) + " of " + str(game_rounds))
-        user_input = input("Please Enter: \n'R' for Rock, 'P' for Paper, 'S' for Scissors, 'L' for Lizzard or 'SP' for Spock (or 'Q' to quit the game): ")
+        user_input = input("Please Enter: \n'R' for Rock, 'P' for Paper, 'S' for Scissors, 'L' for Lizard or 'SP' for Spock (or 'Q' to quit the game): ")
         
         user_input_flag = True
         while(user_input_flag):
@@ -71,7 +103,7 @@ def mainGame():
             elif(user_input.lower() == "s"):
                 user_choice = 'Scissors'
             elif(user_input.lower() == "l"):
-                user_choice = 'Lizzard'
+                user_choice = 'Lizard'
             elif(user_input.lower() == "sp"):
                 user_choice = 'Spock'
             elif(user_input.lower() == "q"):
@@ -82,10 +114,35 @@ def mainGame():
                 user_input = input("Oops, unexpected input! Please Enter: \n'R' for Rock, 'P' for Paper, 'S' for Scissors, 'L' for Lizzard or 'SP' for Spock (or 'Q' to quit the game): ")
                 
         if(user_choice == "Quit"):
+            print("Goodbye!")
             break
         else:        
             print("Com Putera choose " + computer_guess)
             print(username + " choose " + user_choice)    
-            
-            print()
+            win_lose_tie = game_logic(user_choice, computer_guess)
+
+            if(win_lose_tie == -1):
+                print("Com Putera wins the round!")
+                computer_total +=1
+            elif(win_lose_tie == 0):
+                tie_total +=1
+                print("It's a Tie! No points assigned")
+            elif(win_lose_tie == 1):
+                user_total +=1
+                print(username + " wins the round!")  
+
+        print("\n")  
+
+    print("Final score's are as follow: \n")
+    print(username + " = " + str(user_total) + " points")
+    print("Com Putera = " + str(computer_total) + " points")
+    print("Ties = " + str(tie_total))
+
+    if(user_total > computer_total):
+        print("Overall winner of the match is " + username + "!")
+    elif(user_total < computer_total):
+        print("Overall winner of the match is Com Putera!")
+    elif(user_total == computer_total and user_choice != "Quit"):
+        print("It's a TIE!!")    
+
 mainGame()
